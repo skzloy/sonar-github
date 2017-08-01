@@ -99,10 +99,22 @@ public class PullRequestIssuePostJob implements PostJob {
   private void processIssue(GlobalReport report, Map<InputFile, Map<Integer, StringBuilder>> commentToBeAddedByFileAndByLine, PostJobIssue issue) {
     boolean reportedInline = false;
     InputComponent inputComponent = issue.inputComponent();
-    if (gitHubPluginConfiguration.tryReportIssuesInline() && inputComponent != null && inputComponent.isFile()) {
-      reportedInline = tryReportInline(commentToBeAddedByFileAndByLine, issue, (InputFile) inputComponent);
+    if(inputComponent != null && inputComponent.isFile()){
+      if (gitHubPluginConfiguration.tryReportIssuesInline() || gitHubPluginConfiguration.checkModifiedCodeOnly()) {
+        reportedInline = tryReportInline(commentToBeAddedByFileAndByLine, issue, (InputFile) inputComponent);
+      }
+
+      if(gitHubPluginConfiguration.checkModifiedCodeOnly() && reportedInline) {
+        report.process(issue, pullRequestFacade.getGithubUrl(inputComponent, issue.line()), false);
+      }
     }
-    report.process(issue, pullRequestFacade.getGithubUrl(inputComponent, issue.line()), reportedInline);
+
+
+    if(!gitHubPluginConfiguration.checkModifiedCodeOnly())
+    {
+      report.process(issue, pullRequestFacade.getGithubUrl(inputComponent, issue.line()), reportedInline);
+    }
+
   }
 
   private boolean tryReportInline(Map<InputFile, Map<Integer, StringBuilder>> commentToBeAddedByFileAndByLine, PostJobIssue issue, InputFile inputFile) {

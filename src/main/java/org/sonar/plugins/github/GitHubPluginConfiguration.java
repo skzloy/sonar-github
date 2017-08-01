@@ -43,7 +43,7 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
 @InstantiationStrategy(InstantiationStrategy.PER_BATCH)
 public class GitHubPluginConfiguration {
 
-  public static final int MAX_GLOBAL_ISSUES = 10;
+  public static final int MAX_GLOBAL_ISSUES = 50;
   private static final Logger LOG = Loggers.get(GitHubPluginConfiguration.class);
   public static final String HTTP_PROXY_HOSTNAME = "http.proxyHost";
   public static final String HTTPS_PROXY_HOSTNAME = "https.proxyHost";
@@ -134,6 +134,10 @@ public class GitHubPluginConfiguration {
 
   public boolean tryReportIssuesInline() {
     return !settings.getBoolean(GitHubPlugin.GITHUB_DISABLE_INLINE_COMMENTS);
+  }
+
+  public boolean checkModifiedCodeOnly() {
+    return settings.getBoolean(GitHubPlugin.GITHUB_CHECK_MODIFIED_CODE_ONLY);
   }
 
   /**
