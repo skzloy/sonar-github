@@ -51,6 +51,7 @@ public class GlobalReportTest {
       .build()));
 
     settings.setProperty("sonar.host.url", "http://myserver");
+    settings.setProperty("sonar.github.checkModifiedCodeOnly", "false");
   }
 
   private PostJobIssue newMockedIssue(String componentKey, @CheckForNull DefaultInputFile inputFile, @CheckForNull Integer line, Severity severity, boolean isNew, String message,
